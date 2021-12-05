@@ -13,9 +13,15 @@ var spawnItem = function (nameList, value) {
 	if (value) {
 		//save normalized nameList
 		value.nameList = (typeof nameList === "string") ? [nameList] : nameList;
-	}
 
-	return property_by_name_list(spawnData, nameList, value);
+		return property_by_name_list(spawnData, nameList, value);		//set
+	}
+	else if (typeof value === "undefined") {
+		return property_by_name_list(spawnData, nameList);		//get
+	}
+	else {
+		property_by_name_list(spawnData, nameList, value, true);		//delete
+	}
 }
 
 var start = function (nameList, commandPath, args, options, eventCallback) {
