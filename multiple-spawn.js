@@ -90,7 +90,7 @@ var getConsole = function (nameList, item) {
 	if (!item) {
 		item = property_by_name_list(historyConsole, nameList);
 		if (!item) return "(not exists, " + nameList + ")";
-		else return item.join("\n") + "\n(stopped, history for " + nameList + ")";
+		else return item.join("\n") + "\n\n(stopped, history for " + nameList + ")";
 	}
 
 	if (!item.console || !(item.console.length > 0)) return "(void)";
