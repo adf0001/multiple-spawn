@@ -19,24 +19,26 @@ module.exports = {
 			}
 		});
 		if (ret instanceof Error) { done(ret); return; }
-		console.log( "start ping-1 ok, pid=" + ret.process.pid )
+		console.log("start ping-1 ok, pid=" + ret.process.pid)
 
 		var ret2 = multiple_spawn.start("ping-1", "ping -n 4 www.163.com");
 		if (!(ret2 instanceof Error)) { done("expect error"); return; }
 		console.log(ret2.message);
 
-		var ret3 = multiple_spawn.start("ping-2", "ping -n 4 www.163.com", null, null, function (state) {
-			console.log(state);
-			if (state === "exit") {
-				console.log("====================");
-				console.log("ping-2\n" + multiple_spawn.getConsole(null, ret3));
-				console.log("--------------------");
-				doneCnt++;
-				if (doneCnt == 2) done(false);
+		var ret3 = multiple_spawn.start("ping-2", "ping -n 4 www.163.com", null, { keepHistoryConsole: true },
+			function (state) {
+				console.log(state);
+				if (state === "exit") {
+					console.log("====================");
+					console.log("ping-2\n" + multiple_spawn.getConsole("ping-2"));
+					console.log("--------------------");
+					doneCnt++;
+					if (doneCnt == 2) done(false);
+				}
 			}
-		});
+		);
 		if (ret3 instanceof Error) { done(ret3); return; }
-		console.log( "start ping-2 ok, pid=" + ret3.process.pid )
+		console.log("start ping-2 ok, pid=" + ret3.process.pid)
 	},
 
 };
