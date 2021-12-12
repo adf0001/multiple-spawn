@@ -15,7 +15,7 @@ var spawnItem = function (nameList, value) {
 		//save normalized nameList
 		value.nameList = (typeof nameList === "string") ? [nameList] : nameList;
 
-		property_by_name_list(historyConsole, nameList, null, true);	//delete history console
+		//property_by_name_list(historyConsole, nameList, null, true);	//delete history console
 
 		return property_by_name_list(spawnData, nameList, value);		//set
 	}
@@ -63,7 +63,12 @@ var start = function (nameList, commandPath, args, options, eventCallback) {
 
 		if (options.keepHistoryConsole && item && item.console && item.console.length > 0) {
 			//save history console, if options.keepHistoryConsole is set true
-			property_by_name_list(historyConsole, nameList, item.console);
+			var historyArray = property_by_name_list(historyConsole, nameList) || [];
+			add_text_to_line_array.addLine(historyArray, "");
+			add_text_to_line_array.addLine(historyArray, item.console);
+			add_text_to_line_array.addLine(historyArray, ["-----(exited, history from " + nameList + ")-----", ""]);
+
+			property_by_name_list(historyConsole, nameList, historyArray);
 		}
 
 		spawnItem(nameList, null);
@@ -99,7 +104,7 @@ var getConsole = function (nameList, item) {
 	if (!item) {
 		item = property_by_name_list(historyConsole, nameList);
 		if (!item) return "(not exists, " + nameList + ")";
-		else return item.join("\n") + "\n\n(stopped, history for " + nameList + ")";
+		else return item.join("\n");
 	}
 
 	if (!item.console || !(item.console.length > 0)) return "(void)";
