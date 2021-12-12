@@ -7,7 +7,7 @@ var child_process = require("child_process");
 var property_by_name_list = require("property-by-name-list");
 var add_text_to_line_array = require("add-text-to-line-array");
 
-var spawnData = {};	//map name list path to spawn item { console, commandPath, process, nameList }
+var spawnData = {};	//map name list path to spawn item { console, commandPath, process, nameList, options }
 var historyConsole = {};	//map name list path to console history
 
 var spawnItem = function (nameList, value) {
@@ -40,7 +40,7 @@ var start = function (nameList, commandPath, args, options, eventCallback) {
 	if (!("cwd" in options)) options.cwd = path.dirname(commandPath);
 	if (!("shell" in options)) options.shell = true;
 
-	item = { console: [commandPath, ""], commandPath: commandPath };
+	item = { console: [commandPath, ""], commandPath: commandPath, options: options };
 	item.process = child_process.spawn(commandPath, args, options);
 
 	//console.log("stdio.length=" + item.process.stdio.length);
@@ -86,6 +86,9 @@ var stop = function (nameList) {
 
 //stop and clear history console
 var remove = function (nameList) {
+	var item = spawnItem(nameList);
+	if (item && item.options) item.options.keepHistoryConsole = false;
+
 	property_by_name_list(historyConsole, nameList, null, true);
 	return stop(nameList);
 }
