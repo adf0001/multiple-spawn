@@ -1,6 +1,6 @@
 {
   "name": "multiple-spawn",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "run multiple nodejs spawn",
   "main": "multiple-spawn.js",
   "scripts": {

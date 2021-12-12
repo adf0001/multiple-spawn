@@ -32,6 +32,11 @@ module.exports = {
 					console.log("====================");
 					console.log("ping-2\n" + multiple_spawn.getConsole("ping-2"));
 					console.log("--------------------");
+
+					multiple_spawn.remove("ping-2");
+					console.log("ping-2\n" + multiple_spawn.getConsole("ping-2"));
+					console.log("--------------------");
+
 					doneCnt++;
 					if (doneCnt == 2) done(false);
 				}

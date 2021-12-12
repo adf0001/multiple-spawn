@@ -84,6 +84,12 @@ var stop = function (nameList) {
 	return true;
 }
 
+//stop and clear history console
+var remove = function (nameList) {
+	property_by_name_list(historyConsole, nameList, null, true);
+	return stop(nameList);
+}
+
 //var getConsole = function (nameList [, item] )
 var getConsole = function (nameList, item) {
 	if (!item) item = spawnItem(nameList);
@@ -105,6 +111,7 @@ module.exports = {
 
 	start: start,
 	stop: stop,
+	remove: remove,
 
 	getConsole: getConsole,
 };
