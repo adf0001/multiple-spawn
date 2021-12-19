@@ -5,7 +5,7 @@ var path = require("path");
 var child_process = require("child_process");
 
 var property_by_name_list = require("property-by-name-list");
-var add_text_to_line_array = require("add-text-to-line-array");
+var text_line_array = require("text-line-array");
 
 var spawnData = {};	//map name list path to spawn item { console, commandPath, process, nameList, options }
 var historyConsole = {};	//map name list path to console history
@@ -40,33 +40,37 @@ var start = function (nameList, commandPath, args, options, eventCallback) {
 	if (!("cwd" in options)) options.cwd = path.dirname(commandPath);
 	if (!("shell" in options)) options.shell = true;
 
-	item = { console: [commandPath, ""], commandPath: commandPath, options: options };
+	item = {
+		console: text_line_array([commandPath, ""], { maxLineNumber: options.maxConsoleLineNumber }),
+		commandPath: commandPath,
+		options: options
+	};
 	item.process = child_process.spawn(commandPath, args, options);
 
-	//console.log("stdio.length=" + item.process.stdio.length);
+	//console.log("pid=" + item.process.pid);
 
 	item.process.stdout.on('data', (data) => {
 		//console.log(data);
 		var s = data.toString();
-		add_text_to_line_array(item.console, s, "", options.maxConsoleLineNumber);
+		item.console.add(s);
 		console.log(nameList + ": " + s.replace(/\s+$/, ""));
 	});
 
 	item.process.stderr.on('data', (data) => {
 		var s = data.toString();
-		add_text_to_line_array(item.console, s, "stderr: ", options.maxConsoleLineNumber);
+		item.console.add(s, "stderr: ");
 		console.error(nameList + ", stderr: " + s.replace(/\s+$/, ""));
 	});
 
 	item.process.on('exit', (code) => {
-		console.log("spawn exited with code " + code + ", " + nameList);
+		console.log("spawn exited with code " + code + ", pid=" + item.process.pid + ", " + nameList);
 
 		if (options.keepHistoryConsole && item && item.console && item.console.length > 0) {
 			//save history console, if options.keepHistoryConsole is set true
-			var historyArray = property_by_name_list(historyConsole, nameList) || [];
-			add_text_to_line_array.addLine(historyArray, "");
-			add_text_to_line_array.addLine(historyArray, item.console);
-			add_text_to_line_array.addLine(historyArray, ["-----(exited, history from " + nameList + ")-----", ""]);
+			var historyArray = property_by_name_list(historyConsole, nameList) || text_line_array();
+			historyArray.addLine("");
+			historyArray.addLine(item.console.lineArray);
+			historyArray.addLine(["-----(exited, history from " + nameList + ")-----", ""]);
 
 			property_by_name_list(historyConsole, nameList, historyArray);
 		}
@@ -84,6 +88,8 @@ var start = function (nameList, commandPath, args, options, eventCallback) {
 var stop = function (nameList) {
 	var item = spawnItem(nameList);
 	if (!item) return Error("spawn not exists, " + nameList);
+
+	item.process.stdin.end();
 
 	item.process.kill();
 	return true;
@@ -104,11 +110,11 @@ var getConsole = function (nameList, item) {
 	if (!item) {
 		item = property_by_name_list(historyConsole, nameList);
 		if (!item) return "(not exists, " + nameList + ")";
-		else return item.join("\n");
+		else return item.toStrin();
 	}
 
-	if (!item.console || !(item.console.length > 0)) return "(void)";
-	else return item.console.join("\n");
+	if (!item.console || !item.console.isEmpty()) return "(void)";
+	else return item.console.toString();
 }
 
 // module

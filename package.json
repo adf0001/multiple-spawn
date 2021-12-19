@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/adf0001/multiple-spawn#readme",
   "dependencies": {
-    "add-text-to-line-array": "^1.0.2",
-    "property-by-name-list": "^1.0.2"
+    "property-by-name-list": "^1.0.2",
+    "text-line-array": "^1.0.2"
   }
 }
