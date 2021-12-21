@@ -71,7 +71,7 @@ var start = function (nameList, commandPath, args, options, eventCallback) {
 			var historyArray = property_by_name_list(historyConsole, nameList) || text_line_array();
 			historyArray.addLine("");
 			historyArray.addLine(item.console.lineArray);
-			historyArray.addLine(["-----(exited, history from " + nameList + ")-----", ""]);
+			historyArray.addLine(["-----(exited, [" + nameList + "])-----", ""]);
 
 			property_by_name_list(historyConsole, nameList, historyArray);
 		}
@@ -107,17 +107,26 @@ var remove = function (nameList) {
 	return stop(nameList);
 }
 
-//var getConsole = function (nameList [, item] )
-var getConsole = function (nameList, item) {
+function getHistoryConsole(nameList) {
+	var item = property_by_name_list(historyConsole, nameList);
+	if (!item) return null;
+
+	return item.toString();
+}
+
+//history: true or "auto"
+//item: for debug
+//var getConsole = function (nameList [, history [, item]] )
+var getConsole = function (nameList, history, item) {
+	if (history && history != "auto") return getHistoryConsole(nameList);
+
 	if (!item) item = spawnItem(nameList);
+
 	if (!item) {
-		item = property_by_name_list(historyConsole, nameList);
-		if (!item) return "(not exists, " + nameList + ")";
-		else return item.toString();
+		return history ? getHistoryConsole(nameList) : null;
 	}
 
-	if (!item.console || item.console.isEmpty()) return "(void)";
-	else return item.console.toString();
+	return item.console ? item.console.toString() : null;
 }
 
 // module

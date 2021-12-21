@@ -12,7 +12,7 @@ module.exports = {
 			console.log(state);
 			if (state === "exit") {
 				console.log("====================");
-				console.log("ping-1 exited\n" + multiple_spawn.getConsole(null, ret));
+				console.log("ping-1 exited\n" + multiple_spawn.getConsole(null, null, ret));
 				console.log("--------------------");
 				doneCnt++;
 				if (doneCnt == 2) done(false);
@@ -30,11 +30,11 @@ module.exports = {
 				console.log(state);
 				if (state === "exit") {
 					console.log("====================");
-					console.log("ping-2 exited\n" + multiple_spawn.getConsole("ping-2"));
+					console.log("ping-2 exited\n" + multiple_spawn.getConsole("ping-2", "auto"));
 					console.log("--------------------");
 
 					multiple_spawn.remove("ping-2");
-					console.log("ping-2 history\n" + multiple_spawn.getConsole("ping-2"));
+					console.log("ping-2 history\n" + multiple_spawn.getConsole("ping-2", "auto"));
 					console.log("--------------------");
 
 					doneCnt++;
