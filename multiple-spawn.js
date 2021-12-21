@@ -6,6 +6,7 @@ var child_process = require("child_process");
 
 var property_by_name_list = require("property-by-name-list");
 var text_line_array = require("text-line-array");
+var pid_descendant = require("pid-descendant");
 
 var spawnData = {};	//map name list path to spawn item { console, commandPath, process, nameList, options }
 var historyConsole = {};	//map name list path to console history
@@ -62,8 +63,8 @@ var start = function (nameList, commandPath, args, options, eventCallback) {
 		console.error(nameList + ", stderr: " + s.replace(/\s+$/, ""));
 	});
 
-	item.process.on('exit', (code) => {
-		console.log("spawn exited with code " + code + ", pid=" + item.process.pid + ", " + nameList);
+	item.process.on('close', (code) => {
+		console.log("spawn closed with code " + code + ", pid=" + item.process.pid + ", " + nameList);
 
 		if (options.keepHistoryConsole && item && item.console && item.console.length > 0) {
 			//save history console, if options.keepHistoryConsole is set true
@@ -91,7 +92,9 @@ var stop = function (nameList) {
 
 	item.process.stdin.end();
 
-	item.process.kill();
+	//item.process.kill();
+	pid_descendant.kill(item.process.pid);
+
 	return true;
 }
 

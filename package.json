@@ -1,6 +1,6 @@
 {
   "name": "multiple-spawn",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "run multiple nodejs spawn",
   "main": "multiple-spawn.js",
   "scripts": {
@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/adf0001/multiple-spawn#readme",
   "dependencies": {
+    "pid-descendant": "^1.0.3",
     "property-by-name-list": "^1.0.2",
-    "text-line-array": "^1.0.2"
+    "text-line-array": "^1.0.3"
   }
 }
