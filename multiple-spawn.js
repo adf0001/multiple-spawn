@@ -66,7 +66,7 @@ var start = function (nameList, commandPath, args, options, eventCallback) {
 	item.process.on('close', (code) => {
 		console.log("spawn closed with code " + code + ", pid=" + item.process.pid + ", " + nameList);
 
-		if (options.keepHistoryConsole && item && item.console && item.console.length > 0) {
+		if (options.keepHistoryConsole && item && item.console && !item.console.isEmpty()) {
 			//save history console, if options.keepHistoryConsole is set true
 			var historyArray = property_by_name_list(historyConsole, nameList) || text_line_array();
 			historyArray.addLine("");
@@ -113,10 +113,10 @@ var getConsole = function (nameList, item) {
 	if (!item) {
 		item = property_by_name_list(historyConsole, nameList);
 		if (!item) return "(not exists, " + nameList + ")";
-		else return item.toStrin();
+		else return item.toString();
 	}
 
-	if (!item.console || !item.console.isEmpty()) return "(void)";
+	if (!item.console || item.console.isEmpty()) return "(void)";
 	else return item.console.toString();
 }
 
