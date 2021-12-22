@@ -123,7 +123,7 @@ var remove = function (nameList) {
 //item: for debug
 //var getConsole = function (nameList [, history [, item]] )
 var getConsole = function (nameList, history, item) {
-	if (history && history != "auto") return getHistoryConsole(nameList);
+	if (history && history != "auto") return historyConsole(nameList);
 
 	if (!item) item = spawnItem(nameList);
 
