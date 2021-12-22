@@ -25,7 +25,7 @@ module.exports = {
 		if (!(ret2 instanceof Error)) { done("expect error"); return; }
 		console.log(ret2.message);
 
-		var ret3 = multiple_spawn.start("ping-2", "ping -n 4 www.163.com", null, { keepHistoryConsole: true },
+		var ret3 = multiple_spawn.start("ping-2", "ping", ["-n", "4", "www.163.com"], { keepHistoryConsole: true },
 			function (state) {
 				console.log(state);
 				if (state === "exit") {

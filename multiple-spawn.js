@@ -57,7 +57,7 @@ var start = function (nameList, commandPath, args, options, eventCallback) {
 	if (!("shell" in options)) options.shell = true;
 
 	item = {
-		console: text_line_array([commandPath, ""], { maxLineNumber: options.maxConsoleLineNumber }),
+		console: text_line_array([commandPath + (args ? (" [" + args.join(", ") + "]") : ""), ""], { maxLineNumber: options.maxConsoleLineNumber }),
 		commandPath: commandPath,
 		options: options
 	};
