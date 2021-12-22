@@ -133,6 +133,8 @@ var getConsole = function (nameList, history, item) {
 
 module.exports = {
 	spawnData: spawnData,
+	historyConsole: historyConsole,
+
 	spawnItem: spawnItem,
 
 	start: start,
