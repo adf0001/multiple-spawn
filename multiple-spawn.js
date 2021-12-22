@@ -9,14 +9,14 @@ var text_line_array = require("text-line-array");
 var pid_descendant = require("pid-descendant");
 
 var spawnData = {};	//map name list path to spawn item { console, commandPath, process, nameList, options }
-var historyConsole = {};	//map name list path to console history
+var historyConsoleData = {};	//map name list path to console history
 
 var spawnItem = function (nameList, value) {
 	if (value) {
 		//save normalized nameList
 		value.nameList = (typeof nameList === "string") ? [nameList] : nameList;
 
-		//property_by_name_list(historyConsole, nameList, null, true);	//delete history console
+		//property_by_name_list(historyConsoleData, nameList, null, true);	//delete history console
 
 		return property_by_name_list(spawnData, nameList, value);		//set
 	}
@@ -25,6 +25,21 @@ var spawnItem = function (nameList, value) {
 	}
 	else {
 		property_by_name_list(spawnData, nameList, value, true);		//delete
+	}
+}
+
+//var historyConsole = function (nameList [, appendText] )
+var historyConsole = function (nameList, appendText) {
+	var item = property_by_name_list(historyConsoleData, nameList);
+	if (typeof appendText !== "undefined") {
+		//set
+		if (!item) { property_by_name_list(historyConsoleData, nameList, item = text_line_array()); };
+		item.add(appendText);
+	}
+	else {
+		//get
+		if (!item) return null;
+		return item.toString();
 	}
 }
 
@@ -68,12 +83,9 @@ var start = function (nameList, commandPath, args, options, eventCallback) {
 
 		if (options.keepHistoryConsole && item && item.console && !item.console.isEmpty()) {
 			//save history console, if options.keepHistoryConsole is set true
-			var historyArray = property_by_name_list(historyConsole, nameList) || text_line_array();
-			historyArray.addLine("");
-			historyArray.addLine(item.console.lineArray);
-			historyArray.addLine(["-----(exited, [" + nameList + "])-----", ""]);
-
-			property_by_name_list(historyConsole, nameList, historyArray);
+			historyConsole(nameList, [""]);	//new line
+			historyConsole(nameList, item.console);
+			historyConsole(nameList, ["-----(exited, [" + nameList + "])-----", ""]);	//end note text
 		}
 
 		spawnItem(nameList, null);
@@ -103,15 +115,8 @@ var remove = function (nameList) {
 	var item = spawnItem(nameList);
 	if (item && item.options) item.options.keepHistoryConsole = false;
 
-	property_by_name_list(historyConsole, nameList, null, true);
+	property_by_name_list(historyConsoleData, nameList, null, true);
 	return stop(nameList);
-}
-
-function getHistoryConsole(nameList) {
-	var item = property_by_name_list(historyConsole, nameList);
-	if (!item) return null;
-
-	return item.toString();
 }
 
 //history: true or "auto"
@@ -123,7 +128,7 @@ var getConsole = function (nameList, history, item) {
 	if (!item) item = spawnItem(nameList);
 
 	if (!item) {
-		return history ? getHistoryConsole(nameList) : null;
+		return history ? historyConsole(nameList) : null;
 	}
 
 	return item.console ? item.console.toString() : null;
@@ -133,13 +138,14 @@ var getConsole = function (nameList, history, item) {
 
 module.exports = {
 	spawnData: spawnData,
-	historyConsole: historyConsole,
 
 	spawnItem: spawnItem,
+	historyConsole: historyConsole,
 
 	start: start,
 	stop: stop,
 	remove: remove,
 
 	getConsole: getConsole,
+
 };

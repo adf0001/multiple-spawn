@@ -29,6 +29,9 @@ module.exports = {
 			function (state) {
 				console.log(state);
 				if (state === "exit") {
+					//.historyConsole = function (nameList [, appendText] )
+					multiple_spawn.historyConsole("ping-2", ["append some text"]);
+
 					console.log("====================");
 					console.log("ping-2 exited\n" + multiple_spawn.getConsole("ping-2", "auto"));
 					console.log("--------------------");
