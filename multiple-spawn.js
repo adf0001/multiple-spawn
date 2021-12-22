@@ -29,12 +29,18 @@ var spawnItem = function (nameList, value) {
 }
 
 //var historyConsole = function (nameList [, appendText] )
+//		appendText: undefined to get string; `null` to clear; others will append the text;
 var historyConsole = function (nameList, appendText) {
 	var item = property_by_name_list(historyConsoleData, nameList);
 	if (typeof appendText !== "undefined") {
-		//set
-		if (!item) { property_by_name_list(historyConsoleData, nameList, item = text_line_array()); };
-		item.add(appendText);
+		if (appendText === null) {
+			if (item) item.clear();
+		}
+		else {
+			//set
+			if (!item) { property_by_name_list(historyConsoleData, nameList, item = text_line_array()); };
+			item.add(appendText);
+		}
 	}
 	else {
 		//get

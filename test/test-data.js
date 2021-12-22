@@ -36,8 +36,14 @@ module.exports = {
 					console.log("ping-2 exited\n" + multiple_spawn.getConsole("ping-2", "auto"));
 					console.log("--------------------");
 
+					multiple_spawn.historyConsole("ping-2", null);	//clear history
+
+					console.log("====================");
+					console.log("ping-2 exited, clear history\n" + multiple_spawn.getConsole("ping-2", "auto"));
+					console.log("--------------------");
+
 					multiple_spawn.remove("ping-2");
-					console.log("ping-2 history\n" + multiple_spawn.getConsole("ping-2", "auto"));
+					console.log("ping-2 history, removed\n" + multiple_spawn.getConsole("ping-2", "auto"));
 					console.log("--------------------");
 
 					doneCnt++;
