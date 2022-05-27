@@ -1,10 +1,12 @@
-// global, for html page
-multiple_spawn = require("../multiple-spawn.js");
+
+//refer tpsvr @ npm.
 
 module.exports = {
 
 	"multiple_spawn": function (done) {
 		if (typeof window !== "undefined") throw "disable for browser";
+
+		var multiple_spawn = require("../multiple-spawn.js");
 
 		var doneCnt = 0;
 
@@ -62,4 +64,4 @@ module.exports = {
 if (typeof showResult !== "function") showResult = function (text) { console.log(text); }
 
 //for mocha
-if (typeof describe === "function") describe('mocha-test', function () { for (var i in module.exports) { it(i, module.exports[i]).timeout(15000); } });
+if (typeof describe === "function") describe('multiple_spawn', function () { for (var i in module.exports) { it(i, module.exports[i]).timeout(15000); } });
